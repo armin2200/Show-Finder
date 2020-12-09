@@ -1,25 +1,51 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useCallback, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+
 import './App.css';
+import EpisodesList from './components/EpisodesList';
+import SearchBox from './components/SearchBox';
+import ShowList from './components/ShowList';
+import { Status } from './types';
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [status, SetStatus] = useState<Status>('init');
+
+  const searchTermHandler = useCallback((searchTerm: string) => {
+    setSearchTerm(searchTerm);
+  }, []);
+
+  const statusHandler = useCallback((status: Status) => {
+    SetStatus(status);
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className='App'>
+        <div className='Header'>Show Finder</div>
+        <div className='Wrapper'>
+          <SearchBox
+            OnSetSearchTerm={searchTermHandler}
+            disabled={status === 'fetching'}
+          />
+
+          <Switch>
+            <Route path='/search/shows'>
+              <ShowList searchTerm={searchTerm} onSetStatus={statusHandler} />
+            </Route>
+            <Route path='/show'>
+              <EpisodesList />
+            </Route>
+            <Redirect from='/' to='/search' />
+          </Switch>
+        </div>
+      </div>
+    </Router>
   );
 }
 
