@@ -66,22 +66,25 @@ const SearchBox: React.FC<Props> = ({ OnSetSearchTerm, disabled }) => {
   const history = useHistory();
   const [searchInput, setSearchInput] = useState('');
 
-  const searchTermHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const searchTermChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.currentTarget.value;
     setSearchInput(userInput);
   };
 
   const keyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // e.preventDefault();
     if (e.key === 'Enter') {
-      OnSetSearchTerm(searchInput);
-      history.push(`/search/shows?title=${searchInput}`);
+      if (searchInput) {
+        OnSetSearchTerm(searchInput);
+        history.push(`/search/shows?title=${searchInput}`);
+      }
     }
   };
 
   const searchClickHandler = () => {
-    OnSetSearchTerm(searchInput);
-    history.push(`/search/shows?title=${searchInput}`);
+    if (searchInput) {
+      OnSetSearchTerm(searchInput);
+      history.push(`/search/shows?title=${searchInput}`);
+    }
   };
 
   return (
@@ -91,7 +94,7 @@ const SearchBox: React.FC<Props> = ({ OnSetSearchTerm, disabled }) => {
         <input
           value={searchInput}
           type='text'
-          onChange={searchTermHandler}
+          onChange={searchTermChangeHandler}
           onKeyDown={keyDownHandler}
           placeholder='search show titles'
           disabled={disabled}

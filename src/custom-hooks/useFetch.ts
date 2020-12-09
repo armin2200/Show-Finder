@@ -32,7 +32,7 @@ const fetchReducer = <T>(state: State<T>, action: Action<T>): State<T> => {
 };
 function useFetch<T>(url?: string, options?: AxiosRequestConfig): State<T> {
   const cache = useRef<Cache<T>>({});
-  let cancelRequest = false;
+  let cancelRequest = useRef(false);
   const initialState: State<T> = {
     status: 'init',
     error: undefined,
@@ -43,31 +43,36 @@ function useFetch<T>(url?: string, options?: AxiosRequestConfig): State<T> {
     (state: State<T>, action: Action<T>) => State<T>
   >(fetchReducer, initialState);
   useEffect(() => {
+    console.log(url);
     if (!url) {
       return;
     }
     const fetchData = async () => {
       dispatch({ type: 'request' });
-      await sleep(1000);
       if (cache.current[url]) {
         dispatch({ type: 'success', payload: cache.current[url] });
       } else {
+        await sleep(1000);
         try {
           const response = await axios(url, options);
           cache.current[url] = response.data;
-          if (cancelRequest) return;
+          if (cancelRequest.current) return;
           dispatch({ type: 'success', payload: response.data });
         } catch (error) {
-          if (cancelRequest) return;
+          if (cancelRequest.current) return;
           dispatch({ type: 'failure', payload: error.message });
         }
       }
     };
     fetchData();
+  }, [url, options]);
+
+  useEffect(() => {
     return () => {
-      cancelRequest = true;
+      console.log('second');
+      cancelRequest.current = true;
     };
-  }, [url]);
+  }, []);
   return state;
 }
 export default useFetch;

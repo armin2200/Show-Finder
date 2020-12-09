@@ -5,7 +5,6 @@ import { useHistory } from 'react-router-dom';
 
 import Button from './Button';
 import notFound from '../images/notFoundPoster.jpg';
-import { useQuery } from '../custom-hooks/useQuery';
 
 const Wrapper = styled.div`
   padding: 0 10px;
@@ -86,14 +85,14 @@ const ShowCard: React.FC<{
   name: string;
   imageUrl: string;
   summary: string;
-}> = ({ name, imageUrl, summary }) => {
+  id: number;
+}> = ({ name, imageUrl, summary, id }) => {
   const history = useHistory();
-  const query = useQuery();
 
   let url = imageUrl ? imageUrl : notFound;
 
   const searchEpisodesHandler = () => {
-    history.push(`/show?title=${name}&embed=episodes`);
+    history.push(`/show?id=${id}&embed=episodes`);
   };
   return (
     <Wrapper>

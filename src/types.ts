@@ -15,7 +15,7 @@ export interface SingleShow {
   id: number;
   name: string;
   summary: string;
-  image?: { original: string };
+  image?: { original: string; medium: string };
   rating: {
     average: number;
   };

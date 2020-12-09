@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import useFetch from '../custom-hooks/useFetch';
 
@@ -20,9 +20,8 @@ interface Props {
 }
 
 const ShowList: React.FC<Props> = ({ searchTerm, onSetStatus }) => {
-  const { data, error, status } = useFetch<Show[]>(
-    `${URL}shows?q=${searchTerm}`
-  );
+  const url = searchTerm ? `${URL}shows?q=${searchTerm}` : '';
+  const { data, error, status } = useFetch<Show[]>(url);
 
   useEffect(() => {
     onSetStatus(status);
@@ -39,6 +38,7 @@ const ShowList: React.FC<Props> = ({ searchTerm, onSetStatus }) => {
       {data?.map(({ show: { id, name, image, summary } }) => (
         <ShowCard
           key={id}
+          id={id}
           name={name}
           imageUrl={image?.medium ?? ''}
           summary={summary}

@@ -9,7 +9,7 @@ import notFound from '../images/notFoundPoster.jpg';
 import SeasonsBox from './SeasonsBox';
 import Loading from './Loading';
 
-const URL = 'http://api.tvmaze.com/singlesearch/';
+const URL = 'http://api.tvmaze.com/shows';
 
 const Box = styled.div`
   display: grid;
@@ -61,10 +61,14 @@ const Summary = styled.div`
 
 const EpisodesList = () => {
   const query = useQuery();
+  console.log(`${URL}/${query.get(
+    'id'
+  )}&embed[]=crew&embed[]=cast&embed[]=seasons&embed[]=episodes
+  `);
   const { data, error, status } = useFetch<SingleShow>(
-    `${URL}shows?q=${query.get(
-      'title'
-    )}&embed[]=crew&embed[]=cast&embed[]=seasons&embed[]=episodes
+    `${URL}/${query.get(
+      'id'
+    )}?&embed[]=crew&embed[]=cast&embed[]=seasons&embed[]=episodes
     `
   );
 

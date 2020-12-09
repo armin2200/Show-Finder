@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Episode, Season } from '../types';
+import { Season } from '../types';
 
 const Select = styled.div`
   position: relative;
